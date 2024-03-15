@@ -53,6 +53,7 @@ public class FallbackHome extends Activity {
                 R.layout.fallback_home_finishing_boot, null /* root */);
         setContentView(v);
         v.setAlpha(0f);
+        v.setVisibility(View.INVISIBLE);
         v.animate()
                 .alpha(1f)
                 .setDuration(500)
