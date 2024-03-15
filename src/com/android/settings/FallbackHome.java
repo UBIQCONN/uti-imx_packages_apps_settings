@@ -81,6 +81,7 @@ public class FallbackHome extends Activity {
 
         // Set ourselves totally black before the device is provisioned so that
         // we don't flash the wallpaper before SUW
+        /*
         mProvisioned = Settings.Global.getInt(getContentResolver(),
                 Settings.Global.DEVICE_PROVISIONED, 0) != 0;
         final int flags;
@@ -100,6 +101,27 @@ public class FallbackHome extends Activity {
             loadWallpaperColors(flags);
         }
         getWindow().getDecorView().setSystemUiVisibility(flags);
+        */
+
+        // Force unprovisioned state for maximum hiding
+        Settings.Global.putInt(getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 0);
+
+        // Apply immersive theme and flags
+        //setTheme(R.style.FallbackHome_SetupWizard); // Assuming transparent background
+        final int flags = View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        //    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+        mWallManager = getSystemService(WallpaperManager.class);
+        if (mWallManager == null) {
+            Log.w(TAG, "Wallpaper manager isn't ready, can't listen to color changes!");
+        } else {
+            loadWallpaperColors(flags);
+        }
+
+        getWindow().getDecorView().setSystemUiVisibility(flags);
+
+        // Optional additional flags (consider visual preferences)
+        //getWindow().getDecorView().setSystemUiVisibility(flags | View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
         registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_USER_UNLOCKED));
         maybeFinish();
